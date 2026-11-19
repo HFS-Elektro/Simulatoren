@@ -1,0 +1,17 @@
+{
+  "name": "HFS-Simulatoren",
+  "short_name": "HFS-Simulatoren",
+  "lang": "de",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0079c2",
+  "icons": [
+    {
+      "src": "HFS-Simulator-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

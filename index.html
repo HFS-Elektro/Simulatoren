@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0079c2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="HFS-Simulatoren">
+<link rel="manifest" href="start.webmanifest">
+<link rel="apple-touch-icon" href="HFS-Simulator-icon.png">
+<link rel="icon" href="HFS-Simulator-icon.png">
+<title>HFS-Simulatoren</title>
+<style>
+:root{--blau:#00a5fd;--knopf:#0079c2;--gelb:#fdb92b;--text:#1c2430;--grau:#5b6675;--linie:#d5dbe3;--karte:#fff;--grund:#f2f6fa;--hell:#e0f3ff;--ok:#1d8a3a}
+@media (prefers-color-scheme:dark){:root{--text:#e6ebf1;--grau:#a3adba;--linie:#34404f;--karte:#1c2632;--grund:#121a23;--hell:#163247;--ok:#4cc46c}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--grund);color:var(--text);line-height:1.4;
+ padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+main{max-width:960px;margin:0 auto;padding:16px}
+header{background:#fff;border-bottom:3px solid var(--blau)}
+header img{display:block;width:100%;max-width:960px;margin:0 auto;height:auto}
+h1{font-size:1.5rem;margin:18px 0 4px}
+h2{font-size:1.15rem;margin:26px 0 8px}
+p{margin:4px 0 10px}
+.klein{color:var(--grau);font-size:.9rem}
+.klasse{display:none;background:var(--hell);border:1px solid var(--blau);border-radius:10px;padding:10px 14px;margin:14px 0;align-items:center;gap:12px;flex-wrap:wrap}
+.klasse b{font-size:1.05rem}
+.kacheln{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px}
+.kachel{background:var(--karte);border:1px solid var(--linie);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.kopf{display:flex;gap:14px;align-items:center}
+.kopf img{width:64px;height:64px;border-radius:14px;flex:none;background:#fff}
+.kopf h3{margin:0;font-size:1.15rem}
+.kachel .text{flex:1}
+.knopf{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:10px 18px;border-radius:10px;border:0;background:var(--knopf);color:#fff;font-size:1rem;font-weight:600;text-decoration:none;cursor:pointer}
+.knopf.gelb{background:var(--gelb);color:#1c2430}
+.knopf.hell{background:transparent;color:var(--knopf);border:1px solid var(--knopf)}
+@media (prefers-color-scheme:dark){.knopf.hell{color:var(--blau);border-color:var(--blau)}}
+.status{font-size:.88rem;color:var(--grau)}
+.status.ok{color:var(--ok)}
+details{background:var(--karte);border:1px solid var(--linie);border-radius:12px;margin:10px 0;padding:0 14px}
+summary{cursor:pointer;font-weight:600;padding:12px 0;list-style-position:outside}
+details[open] summary{border-bottom:1px solid var(--linie);margin-bottom:8px}
+ol{padding-left:22px}ol li{margin-bottom:6px}
+.geraet{display:none}
+kbd{border:1px solid var(--linie);border-radius:4px;padding:0 5px;background:var(--grund);font-family:inherit}
+#lehrer{display:none}
+label{display:block;margin:8px 0 4px;font-weight:600}
+select,input{font-size:1rem;padding:8px 10px;border:1px solid var(--linie);border-radius:8px;background:var(--karte);color:var(--text);width:100%;max-width:520px}
+#qrbox{display:none;margin:14px 0;text-align:center}
+#qr{display:inline-block;background:#fff;padding:16px;border-radius:12px}
+#qr img,#qr canvas{display:block;width:min(70vw,420px)!important;height:auto!important;image-rendering:pixelated}
+#qrlink{word-break:break-all;font-size:.95rem;margin-top:8px}
+.zeile{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+footer{margin:30px 0 10px;color:var(--grau);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+@media print{header,.kacheln,details,.zeile,footer,#hinweise,h1,.klasse,.nicht-drucken{display:none!important}#lehrer,#qrbox{display:block!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<header><img src="titel.jpg" alt="HFS Schaltungssimulator"></header>
+<main>
+<h1>Simulatoren für Elektroniker</h1>
+<p class="klein">Wähle einen Simulator. Er läuft direkt im Browser, auf dem iPad, dem Handy und dem Laptop. Nach dem ersten Öffnen funktioniert er auch ohne Internet.</p>
+
+<div class="klasse" id="klasse"><div>Deine Klasse: <b id="kname"></b><br><span class="klein" id="kinfo"></span></div>
+ <a class="knopf hell" id="kabgabe" href="#" target="_blank" rel="noopener">Abgabe öffnen</a>
+ <a href="#" id="kwechsel" class="klein" style="color:inherit">Klasse ändern</a></div>
+<div class="klasse" id="kwahl"><label for="kwsel" style="margin:0">Wähle deine Klasse:</label>
+ <select id="kwsel" style="width:auto;min-width:180px"><option value="">–</option></select></div>
+
+<div class="kacheln">
+ <div class="kachel">
+  <div class="kopf"><img src="HFS-Simulator-icon.png" alt=""><div><h3>Schaltungssimulator</h3><span class="klein" id="v-sim"></span></div></div>
+  <div class="text">Stromkreise (LF1), Installationsschaltungen (LF2), Schützsteuerungen (LF3), Elektronik (ab LF5) und Brettaufbau mit Verteiler. Mit Messgeräten und Fehlersuche.</div>
+  <a class="knopf gelb" href="schaltungssimulator.html">▶ Öffnen</a>
+  <span class="status" id="s-sim"></span>
+ </div>
+ <div class="kachel">
+  <div class="kopf"><img src="logo-lab-icon.png" alt=""><div><h3>LOGO Lab</h3><span class="klein" id="v-logo"></span></div></div>
+  <div class="text">Kleinsteuerungen programmieren und testen: Funktionsplan mit Grund- und Sonderfunktionen, Simulation am Bedienfeld.</div>
+  <a class="knopf gelb" href="logo-lab.html">▶ Öffnen</a>
+  <span class="status" id="s-logo"></span>
+ </div>
+</div>
+
+<div id="hinweise">
+<h2>Als App ablegen</h2>
+<p class="klein">Dann öffnest du die Simulatoren mit einem Fingertipp vom Home-Bildschirm, ohne Adressleiste und auch offline.</p>
+<details class="geraet" data-g="ios"><summary>iPad und iPhone (Safari)</summary><ol>
+ <li>Diese Seite in <b>Safari</b> öffnen (nicht in einer anderen App).</li>
+ <li>Auf <b>Teilen</b> tippen (Quadrat mit Pfeil nach oben, beim iPad oben rechts, beim iPhone unten).</li>
+ <li><b>Zum Home-Bildschirm</b> wählen. Eventuell musst du dafür in der Liste nach unten wischen.</li>
+ <li>Name lassen und auf <b>Hinzufügen</b> tippen.</li>
+</ol><p class="klein">Du kannst auch jeden Simulator einzeln ablegen: erst öffnen, dann wie oben.</p></details>
+<details class="geraet" data-g="android"><summary>Android-Handy oder -Tablet (Chrome)</summary><ol>
+ <li>Diese Seite in <b>Chrome</b> öffnen.</li>
+ <li>Oben rechts auf <b>⋮</b> tippen.</li>
+ <li><b>Zum Startbildschirm hinzufügen</b> oder <b>App installieren</b> wählen und bestätigen.</li>
+</ol></details>
+<details class="geraet" data-g="pc"><summary>Laptop oder PC (Chrome, Edge)</summary><ol>
+ <li>In der Adressleiste rechts auf das Symbol <b>Installieren</b> (Bildschirm mit Pfeil) klicken. Bei Edge: <kbd>…</kbd> → <b>Apps</b> → <b>Diese Website als App installieren</b>.</li>
+ <li>Alternativ einfach ein Lesezeichen setzen.</li>
+</ol></details>
+<details><summary>Wo werden meine Schaltungen gespeichert?</summary>
+ <p>Deine Schaltungen bleiben auf deinem Gerät, im Speicher des Browsers. Es wird nichts an den Server geschickt. Wenn du den Browserverlauf oder die Websitedaten löschst, sind sie weg. Exportiere wichtige Schaltungen deshalb als Datei (<b>☰ Mehr</b> bzw. <b>Speichern</b> im Simulator).</p>
+ <p>Abgaben lädst du als Datei dort hoch, wo deine Lehrkraft es sagt (z. B. Moodle).</p>
+</details>
+</div>
+
+<section id="lehrer">
+<h2>Für Lehrkräfte: QR-Code für die Klasse</h2>
+<p class="klein">Den Code am Beamer zeigen oder ausdrucken. Wer ihn scannt, landet auf dieser Seite. Mit gewählter Klasse merkt sich das Gerät die Klasse und den Abgabe-Link (aus <code>klassen.json</code>).</p>
+<label for="ksel">Klasse</label>
+<select id="ksel"><option value="">ohne Klasse</option></select>
+<label for="kziel">Ziel</label>
+<select id="kziel"><option value="">Startseite</option><option value="schaltungssimulator.html">direkt Schaltungssimulator</option><option value="logo-lab.html">direkt LOGO Lab</option></select>
+<div class="zeile nicht-drucken"><button class="knopf" id="qrmach">QR-Code zeigen</button><button class="knopf hell" id="qrdruck">Drucken</button><button class="knopf hell" id="qrkopie">Link kopieren</button></div>
+<div id="qrbox"><div id="qr"></div><div id="qrlink"></div><div id="qrname" style="font-weight:700;font-size:1.2rem;margin-top:6px"></div></div>
+</section>
+
+<footer>Hans-Freudenberg-Schule · <span id="stand"></span> · <a href="#lehrer" id="lzeig">Für Lehrkräfte</a></footer>
+</main>
+
+<script>
+(function(){
+'use strict';
+var LS={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function $(id){return document.getElementById(id)}
+
+/* Gerät erkennen und passende Anleitung aufklappen */
+var ua=navigator.userAgent, ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1), android=/Android/.test(ua);
+var g=ios?'ios':android?'android':'pc';
+[].forEach.call(document.querySelectorAll('.geraet'),function(d){d.style.display='block';if(d.getAttribute('data-g')===g)d.open=true});
+var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+if(standalone)$('hinweise').querySelector('h2').textContent='Hilfe';
+
+/* Versionen anzeigen */
+fetch('version.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(v){
+ if(v.schaltungssimulator)$('v-sim').textContent='Version '+v.schaltungssimulator;
+ if(v.logolab)$('v-logo').textContent='Version '+v.logolab;
+ if(v.stand)$('stand').textContent='Stand '+v.stand;
+}).catch(function(){});
+
+/* Klasse aus dem QR-Code (?k=CODE) übernehmen */
+var klassen=[];
+/* Eine Home-Bildschirm-App hat auf dem iPad einen eigenen Speicher. Deshalb: Klasse aus ?k=, sonst gespeichert, sonst Auswahl. */
+function zeigeKlasse(k){
+ if(!k){$('klasse').style.display='none';return}
+ $('kwahl').style.display='none';
+ $('klasse').style.display='flex';$('kname').textContent=k.name||k.code;
+ if(k.abgabe){$('kabgabe').style.display='';$('kabgabe').href=k.abgabe;$('kinfo').textContent='Abgaben lädst du über „Abgabe öffnen“ hoch.'}
+ else{$('kabgabe').style.display='none';$('kinfo').textContent=''}
+}
+function finde(c){c=(c||'').toLowerCase();return klassen.filter(function(x){return x.code.toLowerCase()===c})[0]}
+function merke(k){LS.set('hfs_klasse',JSON.stringify(k));zeigeKlasse(k)}
+function gespeichert(){try{var k=JSON.parse(LS.get('hfs_klasse'));if(k){var n=finde(k.code);return n||k}}catch(e){}return null}
+var code=(new URLSearchParams(location.search).get('k')||'').trim();
+fetch('klassen.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
+ klassen=(d&&d.klassen)||[];
+ klassen.forEach(function(k){
+  var o=document.createElement('option');o.value=k.code;o.textContent=k.name||k.code;$('ksel').appendChild(o);
+  $('kwsel').appendChild(o.cloneNode(true));
+ });
+ var k=(code&&finde(code))||gespeichert();
+ if(k)merke(k);else if(klassen.length)$('kwahl').style.display='flex';
+}).catch(function(){zeigeKlasse(gespeichert())});
+$('kwsel').onchange=function(){var k=finde(this.value);if(k)merke(k)};
+$('kwechsel').onclick=function(e){e.preventDefault();$('klasse').style.display='none';$('kwsel').value='';$('kwahl').style.display='flex'};
+
+/* Offline: Service Worker anmelden und beide Simulatoren vorab speichern */
+var DATEIEN={sim:['schaltungssimulator.html','HFS-Simulator.webmanifest','HFS-Simulator-icon.png'],logo:['logo-lab.html','logo-lab-icon.png']};
+function status(id,t,ok){var e=$(id);e.textContent=t;e.className='status'+(ok?' ok':'')}
+if(/^https?:$/.test(location.protocol)&&'serviceWorker' in navigator&&window.caches){
+ navigator.serviceWorker.register('HFS-Simulator-sw.js').then(function(){
+  return caches.open('hfs-sim').then(function(c){
+   c.addAll(['./','index.html','titel.jpg','start.webmanifest','version.json']).catch(function(){});
+   Object.keys(DATEIEN).forEach(function(n){
+    var id=n==='sim'?'s-sim':'s-logo';
+    if(!navigator.onLine){caches.match(DATEIEN[n][0],{ignoreSearch:true}).then(function(m){status(id,m?'✓ offline verfügbar':'Erst mit Internet einmal öffnen',!!m)});return}
+    status(id,'wird für offline gespeichert …');
+    c.addAll(DATEIEN[n]).then(function(){status(id,'✓ offline verfügbar',true)}).catch(function(){status(id,'')});
+   });
+  });
+ }).catch(function(){});
+}
+
+/* Lehrkräfte: QR-Code */
+function lehrer(){var on=location.hash==='#lehrer';$('lehrer').style.display=on?'block':'none';if(on)$('lehrer').scrollIntoView()}
+window.addEventListener('hashchange',lehrer);lehrer();
+function zielLink(){
+ var basis=location.href.split('#')[0].split('?')[0].replace(/index\.html$/,'');
+ var ziel=$('kziel').value, k=$('ksel').value;
+ return basis+(ziel||'')+(k?'?k='+encodeURIComponent(k):'');
+}
+var qrLib=null;
+function ladeQr(cb){
+ if(window.QRCode)return cb();
+ var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+ s.onload=cb;s.onerror=function(){alert('Der QR-Code-Baustein konnte nicht geladen werden (keine Internetverbindung?).')};document.head.appendChild(s);
+}
+function machQr(){
+ var link=zielLink();
+ ladeQr(function(){
+  $('qr').innerHTML='';new QRCode($('qr'),{text:link,width:512,height:512,correctLevel:QRCode.CorrectLevel.M});
+  $('qrlink').textContent=link;var o=$('ksel').selectedOptions[0];$('qrname').textContent=$('ksel').value?o.textContent:'';
+  $('qrbox').style.display='block';
+ });
+}
+$('qrmach').onclick=machQr;
+$('qrdruck').onclick=function(){if($('qrbox').style.display!=='block'){machQr();setTimeout(function(){window.print()},800)}else window.print()};
+$('qrkopie').onclick=function(){var l=zielLink();if(navigator.clipboard)navigator.clipboard.writeText(l).then(function(){$('qrkopie').textContent='✓ kopiert'});else prompt('Link:',l)};
+/* Hinweis: Mit ?k= auf einer Simulator-Seite übernimmt diese Startseite die Klasse nicht. Daher führt der QR-Code mit Klasse immer über die Startseite. */
+$('kziel').onchange=function(){if($('kziel').value&&$('ksel').value){$('ksel').value='';alert('Mit Klasse führt der QR-Code auf die Startseite, damit das Gerät die Klasse speichern kann.')}};
+$('ksel').onchange=function(){if($('ksel').value)$('kziel').value=''};
+})();
+</script>
+</body>
+</html>
