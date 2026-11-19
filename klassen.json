@@ -1,13 +1,28 @@
 {
   "klassen": [
     {
-      "code": "E1A",
-      "name": "E1A (Beispiel)",
+      "code": "AVE2/26",
+      "name": "AVE2",
       "abgabe": ""
     },
     {
-      "code": "E1B",
-      "name": "E1B (Beispiel)",
+      "code": "E1EG-T/26",
+      "name": "E1EG-T",
+      "abgabe": ""
+    },
+    {
+      "code": "E1BT-T/26",
+      "name": "E1BT-T",
+      "abgabe": ""
+    },
+    {
+      "code": "E2EG-T/26",
+      "name": "E2EG-T",
+      "abgabe": ""
+    },
+    {
+      "code": "E3EG-T/26",
+      "name": "E3EG-T",
       "abgabe": ""
     }
   ]
