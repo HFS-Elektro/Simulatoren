@@ -7,7 +7,7 @@
     },
     {
       "code": "E1EG-T/26",
-      "name": "E1EG-T",
+      "name": "E(1-4)EG-T",
       "abgabe": ""
     },
     {
@@ -16,14 +16,9 @@
       "abgabe": ""
     },
     {
-      "code": "E2EG-T/26",
-      "name": "E2EG-T",
+      "code": "TG-E-UT/26",
+      "name": "TG-E-UT",
       "abgabe": ""
     },
-    {
-      "code": "E3EG-T/26",
-      "name": "E3EG-T",
-      "abgabe": ""
-    }
   ]
 }
